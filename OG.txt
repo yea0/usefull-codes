@@ -1,0 +1,59 @@
+# Jenkins runs pipelines on the host system that it is setup on. To run it on windows
+# install the server on a windows machine by following https://www.jenkins.io/doc/book/installing/windows/
+# once it has been setup add the below step to your pipeline file to run automated tests using Postman CLI.
+
+pipeline {
+  agent any
+
+  tools {nodejs "{your_nodejs_configured_tool_name}"}
+
+  stages {
+    stage('Install Postman CLI') {
+      steps {
+        sh 'powershell.exe -NoProfile -InputFormat None -ExecutionPolicy AllSigned -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://dl-cli.pstmn.io/install/win64.ps1'))"'
+      }
+    }
+
+    stage('Postman CLI Login') {
+      steps {
+        sh 'postman login --with-api-key $POSTMAN_API_KEY'
+      }
+    }
+
+    stage('Running collection') {
+      steps {
+        sh 'postman collection run "35049565-9fb4f9cf-2b21-4515-8039-5bcb0007215c" -e "35049565-da91961b-3d5e-4544-8283-f681d957b55d"'
+      }
+    }
+  }
+}
+
+
+
+
+<script type='text/javascript' src='https://service.force.com/embeddedservice/menu/fab.min.js'></script>
+<script type='text/javascript'>
+	var initESW = function(gslbBaseURL) {
+		// Required if you want labels in a language that’s different from your user’s context.
+		//embedded_svc.menu.settings.language = ''; //For example, enter 'en' or 'en-US'
+
+		embedded_svc.menu.init(
+			'https://ferrariapple-dev-ed.develop.my.salesforce.com',
+			'https://d.la1-core1.sfdc-cehfhs.salesforceliveagent.com/chat',
+			gslbBaseURL,
+			'00DQy000008Jgjj',
+			'OG'
+		);
+	};
+
+	if (!window.embedded_svc || !window.embedded_svc.menu) {
+		var s = document.createElement('script');
+		s.setAttribute('src', 'https://ferrariapple-dev-ed.develop.my.salesforce.com/embeddedservice/menu/fab.min.js');
+		s.onload = function() {
+			initESW(null);
+		};
+		document.body.appendChild(s);
+	} else {
+		initESW('https://service.force.com');
+	}
+</script>
